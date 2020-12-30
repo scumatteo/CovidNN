@@ -74,7 +74,7 @@ def __vis_heatmap(cam, cam3, heatmap):
     ax[0].axis("off")
     ax[1].imshow(cam3)
     ax[1].axis("off")
-    ax[2].imshow(heatmap)
+    ax[2].imshow(heatmap[0])
     ax[2].axis("off")
     plt.tight_layout()
     plt.show()
