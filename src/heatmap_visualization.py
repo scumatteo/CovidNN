@@ -61,8 +61,8 @@ def __overlay_gradCAM(img, cam3):
 
 def __vis_heatmap(cam, cam3, heatmap):
     fig, ax = plt.subplots(1, 3, figsize=(50,50))
-    ax[0, 0].imshow(cam)
-    ax[0, 1].imshow(cam3)
-    ax[0, 2].imshow(heatmap)
+    ax[0].imshow(cam)
+    ax[1].imshow(cam3)
+    ax[2].imshow(heatmap)
     plt.tight_layout()
     plt.show()
