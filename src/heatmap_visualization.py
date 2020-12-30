@@ -13,6 +13,15 @@ def visualize(model, layer_name, image):
     heatmap = __overlay_gradCAM(image,cam3)
     heatmap = heatmap[..., ::-1] # BGR to RGB
     __vis_heatmap(cam, cam3, heatmap)
+"""
+    gh_cam = __guided_backprop(__build_guided_model(model, layer_name), image, target_size)
+    guided_gradcam = __deprocess_image(gh_cam*cam3)
+
+    gb_cam = __guided_backprop(__build_guided_model(model, layer_name), image, target_size)
+    gb_im = __deprocess_image(gb_cam)
+    gb_im = gb_im[..., ::-1] # BGR to RGB
+    plt.imshow(gb_im)
+    """
 
 def __compute_heatmap(model, layer_name, image, upsample_size, classIdx=None, eps=1e-5):
         grad_model = Model(
@@ -69,3 +78,57 @@ def __vis_heatmap(cam, cam3, heatmap):
     ax[2].axis("off")
     plt.tight_layout()
     plt.show()
+
+
+@tf.custom_gradient
+def __guidedRelu(x):
+    def grad(dy):
+        return tf.cast(dy>0,"float32") * tf.cast(x>0, "float32") * dy
+    return tf.nn.relu(x), grad
+
+def __build_guided_model(model, layerName):
+        gbModel = Model(
+            inputs = [model.inputs],
+            outputs = [model.get_layer(layerName).output]
+        )
+        layer_dict = [layer for layer in gbModel.layers[1:] if hasattr(layer,"activation")]
+        for layer in layer_dict:
+            if layer.activation == tf.keras.activations.relu:
+                layer.activation = guidedRelu
+        
+        return gbModel
+    
+def __guided_backprop(gbModel, images, upsample_size):
+        """Guided Backpropagation method for visualizing input saliency."""
+        with tf.GradientTape() as tape:
+            inputs = tf.cast(images, tf.float32)
+            tape.watch(inputs)
+            outputs = gbModel(inputs)
+
+        grads = tape.gradient(outputs, inputs)[0]
+
+        saliency = cv2.resize(np.asarray(grads), upsample_size)
+
+        return saliency
+
+    
+def __deprocess_image(x):
+    """Same normalization as in:
+    https://github.com/fchollet/keras/blob/master/examples/conv_filter_visualization.py
+    """
+    # normalize tensor: center on 0., ensure std is 0.25
+    x = x.copy()
+    x -= x.mean()
+    x /= (x.std() + K.epsilon())
+    x *= 0.25
+
+    # clip to [0, 1]
+    x += 0.5
+    x = np.clip(x, 0, 1)
+
+    # convert to RGB array
+    x *= 255
+    if K.image_data_format() == 'channels_first':
+        x = x.transpose((1, 2, 0))
+    x = np.clip(x, 0, 255).astype('uint8')
+    return x
