@@ -4,7 +4,7 @@ from tensorflow import keras
 from keras.models import Model
 
 # returns an image in the right format to do a prediction.
-def __get_img_array(img_path, size):
+def get_img_array(img_path, size):
     # image is a PIL image of size 299x299
     image = keras.preprocessing.image.load_img(img_path, target_size=size)
     # image is a float32 Numpy array of shape (299, 299, 3)
