@@ -1,3 +1,8 @@
+import matplotlib.pyplot as plt
+from tensorflow import keras
+from keras.models import Model
+import numpy as np
+
 def visualize_feature_map(img_path, size, model, layer_name):
     feature_maps = extract_features(model, layer_name, get_img_array(img_path=img_path, size = size))
     vis_feature_map(feature_maps)
