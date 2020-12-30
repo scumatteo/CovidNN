@@ -1,2 +1,2 @@
 # CovidNN
-* Project for course of Visione Artificale e Riconoscimento
+* Project for course of Visione Artificiale e Riconoscimento
