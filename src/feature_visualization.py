@@ -4,23 +4,11 @@ import numpy as np
 from tensorflow import keras
 from keras.models import Model
 
-def visualize(img_path, model, layer_name):
-    target_size = (model.input.shape[1], model.input.shape[2])
-    feature_maps = __extract_features(model, layer_name, __get_img_array(img_path=img_path, size = target_size))
+def visualize(image, model, layer_name):
+    #target_size = (model.input.shape[1], model.input.shape[2])
+    #feature_maps = __extract_features(model, layer_name, __get_img_array(img_path=img_path, size = target_size))
+    feature_maps = __extract_features(model, layer_name, image)
     __vis_feature_map(feature_maps)
-
-# returns an image in the right format to do a prediction.
-def __get_img_array(img_path, size):
-    # image is a PIL image of size 299x299
-    image = keras.preprocessing.image.load_img(img_path, target_size=size)
-    # image is a float32 Numpy array of shape (299, 299, 3)
-    image = keras.preprocessing.image.img_to_array(image)
-    # transform in range [0, 1]
-    image = image / 255
-    # We add a dimension to transform our image into a "batch"
-    # of size (1, 299, 299, 3)
-    image = np.expand_dims(image, axis=0)
-    return image
 
 # extracts the features of an image in a specific layer of a specific model.
 def __extract_features(model, layer_name, image):
