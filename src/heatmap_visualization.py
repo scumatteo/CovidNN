@@ -60,9 +60,12 @@ def __overlay_gradCAM(img, cam3):
     return new_img
 
 def __vis_heatmap(cam, cam3, heatmap):
-    fig, ax = plt.subplots(1, 3, figsize=(50,50))
+    fig, ax = plt.subplots(1, 3, figsize=(40,40))
     ax[0].imshow(cam)
+    ax[0].axis("off")
     ax[1].imshow(cam3)
+    ax[1].axis("off")
     ax[2].imshow(heatmap)
+    ax[2].axis("off")
     plt.tight_layout()
     plt.show()
