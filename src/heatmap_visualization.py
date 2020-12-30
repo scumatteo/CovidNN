@@ -8,7 +8,7 @@ from keras.models import Model
 def visualize(model, layer_name, image):
     target_size = (model.input.shape[1], model.input.shape[2])
     prediction = model.predict(image)
-    classIdx = np.argmax(preds[0])
+    classIdx = np.argmax(prediction[0])
     cam, cam3 = __compute_heatmap(model, layer_name, image, classIdx=classIdx, upsample_size=target_size)
     heatmap = __overlay_gradCAM(image,cam3)
     heatmap = heatmap[..., ::-1] # BGR to RGB
