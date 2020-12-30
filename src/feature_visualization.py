@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-from tensorflow import keras
-from keras.models import Model
+import tensorflow as tf
 import numpy as np
 
 def visualize_feature_map(img_path, size, model, layer_name):
@@ -10,9 +9,9 @@ def visualize_feature_map(img_path, size, model, layer_name):
 # returns an image in the right format to do a prediction.
 def get_img_array(img_path, size):
     # image is a PIL image of size 299x299
-    image = keras.preprocessing.image.load_img(img_path, target_size=size)
+    image = tf.keras.preprocessing.image.load_img(img_path, target_size=size)
     # image is a float32 Numpy array of shape (299, 299, 3)
-    image = keras.preprocessing.image.img_to_array(image)
+    image = tf.keras.preprocessing.image.img_to_array(image)
     # transform in range [0, 1]
     image = image / 255
     # We add a dimension to transform our image into a "batch"
@@ -22,7 +21,7 @@ def get_img_array(img_path, size):
 
 # extracts the features of an image in a specific layer of a specific model.
 def extract_features(model, layer_name, image):
-    feature_model = Model(inputs=model.inputs,outputs=model.get_layer(layer_name).output)
+    feature_model = tf.keras.models.Model(inputs=model.inputs,outputs=model.get_layer(layer_name).output)
     return feature_model.predict(image)
 
 # utility function to display 8 x 8 feature extracted (or less if there isn't).
