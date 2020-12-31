@@ -75,23 +75,23 @@ def __overlay_gradCAM(img, cam3):
     return new_img
 
 def __vis_heatmap(cam, cam3, heatmap):
-    fig, ax = plt.subplots(1, 3, figsize=(40,40))
+    fig, ax = plt.subplots(1, 3, figsize=(15,15))
     ax[0].imshow(cam)
-    ax[0].axis("off")
+    ax[0].set_title("HeatMap")
     ax[1].imshow(cam3)
-    ax[1].axis("off")
+    ax[1].set_title("HeatMap Relu")
     ax[2].imshow(heatmap[0])
-    ax[2].axis("off")
+    ax[2].set_title("Image with HeatMap")
     plt.tight_layout()
     plt.show()
 
 
 def __vis_guided(guided_gradcam, guided_backprop):
-    fig, ax = plt.subplots(1, 2, figsize=(40,40))
+    fig, ax = plt.subplots(1, 2, figsize=(10,10))
     ax[0].imshow(guided_gradcam)
-    ax[0].set_label("Guided GRAD-Cam")
+    ax[0].set_title("Guided GRAD-Cam")
     ax[1].imshow(guided_backprop)
-    ax[1].set_label("Guided Back-Propagation")
+    ax[1].set_title("Guided Back-Propagation")
     plt.tight_layout()
     plt.show()
 
