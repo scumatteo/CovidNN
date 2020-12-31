@@ -89,9 +89,9 @@ def __vis_heatmap(cam, cam3, heatmap):
 def __vis_guided(guided_gradcam, guided_backprop):
     fig, ax = plt.subplots(1, 2, figsize=(40,40))
     ax[0].imshow(guided_gradcam)
-    ax[0].axis("off")
+    ax[0].set_label("Guided GRAD-Cam")
     ax[1].imshow(guided_backprop)
-    ax[1].axis("off")
+    ax[1].set_label("Guided Back-Propagation")
     plt.tight_layout()
     plt.show()
 
