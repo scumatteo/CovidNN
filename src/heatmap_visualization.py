@@ -26,7 +26,7 @@ def visualize_guided(model, layer_name, image):
     gb_cam = __guided_backprop(__build_guided_model(model, layer_name), image, target_size)
     gb_im = __deprocess_image(gb_cam)
     gb_im = gb_im[..., ::-1] # BGR to RGB
-    plt.imshow(gb_im)
+    __vis_guided(guided_gradcam, gb_im)
 
 
 def __compute_heatmap(model, layer_name, image, upsample_size, classIdx=None, eps=1e-5):
@@ -84,6 +84,17 @@ def __vis_heatmap(cam, cam3, heatmap):
     ax[2].axis("off")
     plt.tight_layout()
     plt.show()
+
+
+def __vis_guided(guided_gradcam, guided_backprop):
+    fig, ax = plt.subplots(1, 2, figsize=(40,40))
+    ax[0].imshow(guided_gradcam)
+    ax[0].axis("off")
+    ax[1].imshow(guided_backprop)
+    ax[1].axis("off")
+    plt.tight_layout()
+    plt.show()
+
 
 
 @tf.custom_gradient
