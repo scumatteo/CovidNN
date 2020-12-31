@@ -15,3 +15,15 @@ def get_img_array(img_path, size):
     # of size (1, 299, 299, 3)
     image = np.expand_dims(image, axis=0)
     return image
+
+
+def vis_images(normal_img, covid_img, pneum_img):
+    fig, ax = plt.subplots(1, 3, figsize=(15,15))
+    ax[0].imshow(normal_img)
+    ax[0].set_title("Normal")
+    ax[1].imshow(covid_img)
+    ax[1].set_title("Covid-19")
+    ax[2].imshow(pneum_img)
+    ax[2].set_title("Viral Pneumonia")
+    plt.tight_layout()
+    plt.show()
