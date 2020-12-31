@@ -2,6 +2,8 @@ import tensorflow
 import numpy as np
 from tensorflow import keras
 from keras.models import Model
+import matplotlib.pyplot as plt
+
 
 # returns an image in the right format to do a prediction.
 def get_img_array(img_path, size):
