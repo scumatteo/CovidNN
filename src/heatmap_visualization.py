@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from keras.models import Model
 
+
 def visualize(model, layer_name, image):
     target_size = (model.input.shape[1], model.input.shape[2])
     prediction = model.predict(image)
@@ -13,15 +14,19 @@ def visualize(model, layer_name, image):
     heatmap = __overlay_gradCAM(image,cam3)
     heatmap = heatmap[..., ::-1] # BGR to RGB
     __vis_heatmap(cam, cam3, heatmap)
-"""
+
+def visualize_guided(model, layer_name, image):
+    target_size = (model.input.shape[1], model.input.shape[2])
+    prediction = model.predict(image)
+    classIdx = np.argmax(prediction[0])
+    cam, cam3 = __compute_heatmap(model, layer_name, image, classIdx=classIdx, upsample_size=target_size)
     gh_cam = __guided_backprop(__build_guided_model(model, layer_name), image, target_size)
     guided_gradcam = __deprocess_image(gh_cam*cam3)
-
     gb_cam = __guided_backprop(__build_guided_model(model, layer_name), image, target_size)
     gb_im = __deprocess_image(gb_cam)
     gb_im = gb_im[..., ::-1] # BGR to RGB
     plt.imshow(gb_im)
-    """
+
 
 def __compute_heatmap(model, layer_name, image, upsample_size, classIdx=None, eps=1e-5):
         grad_model = Model(
