@@ -99,7 +99,7 @@ def __build_guided_model(model, layerName):
         layer_dict = [layer for layer in gbModel.layers[1:] if hasattr(layer,"activation")]
         for layer in layer_dict:
             if layer.activation == tf.keras.activations.relu:
-                layer.activation = guidedRelu
+                layer.activation = __guidedRelu
         
         return gbModel
     
