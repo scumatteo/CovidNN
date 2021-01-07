@@ -17,7 +17,7 @@ def get_img_array(img_path, size):
 
 
 def vis_images(images, titles, n_columns):
-    fig, ax = plt.subplots(len(images)/n_columns, n_columns, figsize=(10,10))
+    fig, ax = plt.subplots(len(images)//n_columns, n_columns, figsize=(10,10))
     for i in len(images):
         ax[i].imshow(images[i])
         ax[i].set_title(titles[i])
