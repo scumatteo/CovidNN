@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 def get_train_valid_names():
     img_paths = glob('/content/XRAYChestSegmentation/originals/*.png')
     names = [x.split('/')[-1] for x in img_paths]
-    print('Numero totale di immagini del dataset XRAYChestSegmentation e rispettive maschere: %d' + len(names))
+    print('Numero totale di immagini del dataset XRAYChestSegmentation e rispettive maschere: ', len(names))
 
     X = names
     train_X,valid_X = train_test_split(X,test_size=0.2,random_state=42)
