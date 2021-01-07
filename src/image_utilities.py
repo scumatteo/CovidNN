@@ -16,13 +16,10 @@ def get_img_array(img_path, size):
     return image
 
 
-def vis_images(normal_img, covid_img, pneum_img):
-    fig, ax = plt.subplots(1, 3, figsize=(15,15))
-    ax[0].imshow(normal_img)
-    ax[0].set_title("Normal")
-    ax[1].imshow(covid_img)
-    ax[1].set_title("Covid-19")
-    ax[2].imshow(pneum_img)
-    ax[2].set_title("Viral Pneumonia")
-    plt.tight_layout()
-    plt.show()
+def vis_images(images, titles, n_columns):
+    fig, ax = plt.subplots(len(images)/n_columns, n_columns, figsize=(10,10))
+    for i in len(images):
+        ax[i].imshow(images[i])
+        ax[i].set_title(titles[i])
+        plt.tight_layout()
+        plt.show()
