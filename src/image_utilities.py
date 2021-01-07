@@ -17,7 +17,7 @@ def get_img_array(img_path, size):
 
 
 def vis_images(images, titles, n_columns):
-    n_rows = len(images)//n_columns
+    n_rows = len(images)//n_columns #forse ci vuole +1
     n_cols = n_columns
     fig, ax = plt.subplots(n_rows, n_cols, figsize=(15,15))
     if n_rows == 1:
