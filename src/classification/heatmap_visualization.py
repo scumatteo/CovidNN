@@ -7,6 +7,7 @@ from keras import backend as K
 from keras.models import Model
 
 
+#funzione pubblica per visualizzare le heatmap calcolate.
 def visualize(model, layer_name, image):
     target_size = (model.input.shape[1], model.input.shape[2])
     prediction = model.predict(image)
@@ -16,6 +17,7 @@ def visualize(model, layer_name, image):
     heatmap = heatmap[..., ::-1] # BGR to RGB
     __vis_heatmap(cam, cam3, heatmap)
 
+#funzione pubblica per visualizzare le heatmap guided calcolate.
 def visualize_guided(model, layer_name, image):
     target_size = (model.input.shape[1], model.input.shape[2])
     prediction = model.predict(image)
@@ -28,44 +30,44 @@ def visualize_guided(model, layer_name, image):
     gb_im = gb_im[..., ::-1] # BGR to RGB
     __vis_guided(guided_gradcam, gb_im)
 
-
+#funzione per il calcolo delle heatmap di uno specifico livello di uno specifico modello.
 def __compute_heatmap(model, layer_name, image, upsample_size, classIdx=None, eps=1e-5):
         grad_model = Model(
             inputs=[model.inputs],
             outputs=[model.get_layer(layer_name).output, model.output]
         )
-        # record operations for automatic differentiation
+        # registro le operazioni di differenziazione automatica
             
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
-            (conv_outs, preds) = grad_model(inputs)  # preds after softmax
+            (conv_outs, preds) = grad_model(inputs)  # predizioni dopo la softmax
             if classIdx is None:
                 classIdx = np.argmax(preds)
             loss = preds[:, classIdx]
         
-        # compute gradients with automatic differentiation
+        # calcolo dei gradienti con la differenziazione automatica
         grads = tape.gradient(loss, conv_outs)
-        # discard batch
+        # scartare la batch
         conv_outs = conv_outs[0]
         grads = grads[0]
         norm_grads = tf.divide(grads, tf.reduce_mean(tf.square(grads)) + tf.constant(eps))
 
-        # compute weights
+        # calcolo dei pesi
         weights = tf.reduce_mean(norm_grads, axis=(0, 1))
         cam = tf.reduce_sum(tf.multiply(weights, conv_outs), axis=-1)
 
-        # Apply reLU
+        # applicazione della reLU
         camR = np.maximum(cam, 0)
         camR = camR / np.max(camR)
         camR = cv2.resize(camR, upsample_size,cv2.INTER_LINEAR)
 
-        # convert to 3D
+        # conversione in 3 dimensioni
         cam3 = np.expand_dims(camR, axis=2)
         cam3 = np.tile(cam3, [1, 1, 3])
         
         return cam, cam3
 
-
+#funzione per l'applicazione della grad-cam sull'immagine originale.
 def __overlay_gradCAM(img, cam3):
     cam3 = np.uint8(255 * cam3)
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
@@ -74,6 +76,7 @@ def __overlay_gradCAM(img, cam3):
 
     return new_img
 
+#funzione per plottare heatmap, heatmap con la relu e l'immagini con l'heatmap.
 def __vis_heatmap(cam, cam3, heatmap):
     fig, ax = plt.subplots(1, 3, figsize=(15,15))
     ax[0].imshow(cam)
@@ -85,7 +88,7 @@ def __vis_heatmap(cam, cam3, heatmap):
     plt.tight_layout()
     plt.show()
 
-
+#funzione per plottare la grad-cam guidata e la back-propagation guidata.
 def __vis_guided(guided_gradcam, guided_backprop):
     fig, ax = plt.subplots(1, 2, figsize=(10,10))
     ax[0].imshow(guided_gradcam)
@@ -94,7 +97,6 @@ def __vis_guided(guided_gradcam, guided_backprop):
     ax[1].set_title("Guided Back-Propagation")
     plt.tight_layout()
     plt.show()
-
 
 
 @tf.custom_gradient
@@ -115,8 +117,8 @@ def __build_guided_model(model, layerName):
         
         return gbModel
     
+#funzione per  la guided backpropagation per visualizzare gli input salienti.
 def __guided_backprop(gbModel, images, upsample_size):
-        """Guided Backpropagation method for visualizing input saliency."""
         with tf.GradientTape() as tape:
             inputs = tf.cast(images, tf.float32)
             tape.watch(inputs)
@@ -128,22 +130,19 @@ def __guided_backprop(gbModel, images, upsample_size):
 
         return saliency
 
-    
+   
 def __deprocess_image(x):
-    """Same normalization as in:
-    https://github.com/fchollet/keras/blob/master/examples/conv_filter_visualization.py
-    """
-    # normalize tensor: center on 0., ensure std is 0.25
+    # normalizzazione del tensore: centro su 0., assicura che std sia 0.25
     x = x.copy()
     x -= x.mean()
     x /= (x.std() + K.epsilon())
     x *= 0.25
 
-    # clip to [0, 1]
+    # clippa il valore tra [0, 1]
     x += 0.5
     x = np.clip(x, 0, 1)
 
-    # convert to RGB array
+    # conversione in array RGB
     x *= 255
     if K.image_data_format() == 'channels_first':
         x = x.transpose((1, 2, 0))

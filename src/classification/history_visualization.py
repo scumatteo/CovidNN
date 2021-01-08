@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 
+#funzione per il plotting dei grafici riguardati la storia dell'addestramento di un modello.
 def visualize(history):
-  # "Accuracy"
+  # "Accuratezza"
   plt.plot(history.history['accuracy'])
   plt.plot(history.history['val_accuracy'])
   plt.title('model accuracy')
@@ -9,7 +10,7 @@ def visualize(history):
   plt.xlabel('epoch')
   plt.legend(['train', 'validation'], loc='upper left')
   plt.show()
-  # "Loss"
+  # "Perdita"
   plt.plot(history.history['loss'])
   plt.plot(history.history['val_loss'])
   plt.title('model loss')

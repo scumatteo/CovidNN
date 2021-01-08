@@ -10,7 +10,7 @@ from keras.preprocessing.image import ImageDataGenerator
 import cv2
 from glob import glob
 
-
+#DEPRECATED?
 class Unet(object):
 	"""docstring for Unet"""
 	def __init__(self):

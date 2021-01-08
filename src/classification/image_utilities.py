@@ -5,19 +5,20 @@ from keras.models import Model
 import matplotlib.pyplot as plt
 
 
-# returns an image in the right format to do a prediction.
+#funzione che restituisce un immagine nel formato corretto per la prediction.
 def get_img_array(img_path, size):
     image = keras.preprocessing.image.load_img(img_path, target_size=size)
     image = keras.preprocessing.image.img_to_array(image)
-    # transform in range [0, 1]
+    # trasformazione in range [0, 1]
     image = image / 255
-    # We add a dimension to transform our image into a "batch"
+    #Aggiunta di una dimensione per convertire la nostra img in un "batch"
     image = np.expand_dims(image, axis=0)
     return image
 
 
+#funzione per la visualizzazione delle immagini in un array e dei rispettivi titoli.
 def vis_images(images, titles, n_columns):
-    n_rows = len(images)//n_columns #forse ci vuole +1
+    n_rows = len(images)//n_columns 
     n_cols = n_columns
     fig, ax = plt.subplots(n_rows, n_cols, figsize=(15,15))
     if n_rows == 1:
