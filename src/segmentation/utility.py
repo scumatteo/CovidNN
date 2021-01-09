@@ -24,20 +24,20 @@ def copy_images(in_paths,out_paths):
 #funzione per copiare tutte le immagini di training e validation set nelle cartelle create
 #in modo da poter utilizzare la flow_from_directory di Keras per l'addestramento 
 def copy_sets(train,valid,base_path):
-    img_in_paths = [''.join(['/content/XRAYChestSegmentation/originals/',name]) for name in train]
-    img_out_paths = [''.join([base_path,'train/images/input/',name]) for name in train]
+    img_in_paths = ['/content/XRAYChestSegmentation/originals/' + name for name in train]
+    img_out_paths = [base_path + '/train/images/input/' + name for name in train]
     copy_images(img_in_paths,img_out_paths)
 
-    mask_in_paths = [''.join(['/content/XRAYChestSegmentation/masks/',name]) for name in train]
-    mask_out_paths = [''.join([base_path,'train/masks/input/',name]) for name in train]
+    mask_in_paths = ['/content/XRAYChestSegmentation/masks/' + name for name in train]
+    mask_out_paths = [base_path + '/train/masks/input/' + name for name in train]
     copy_images(mask_in_paths,mask_out_paths)
 
-    img_in_paths = [''.join(['/content/XRAYChestSegmentation/originals/',name]) for name in valid]
-    img_out_paths = [''.join([base_path,'validation/images/input/',name]) for name in valid]
+    img_in_paths = ['/content/XRAYChestSegmentation/originals/' + name for name in valid]
+    img_out_paths = [base_path + '/validation/images/input/' + name for name in valid]
     copy_images(img_in_paths,img_out_paths)
 
-    mask_in_paths = [''.join(['/content/XRAYChestSegmentation/masks/',name]) for name in valid]
-    mask_out_paths = [''.join([base_path,'validation/masks/input/',name]) for name in valid]
+    mask_in_paths = ['/content/XRAYChestSegmentation/masks/' + name for name in valid]
+    mask_out_paths = [base_path + '/validation/masks/input/' + name for name in valid]
     copy_images(mask_in_paths,mask_out_paths)
 
 #funzione di utility che stampa il numero di file contenuti nelle sottocartelle di base_path
